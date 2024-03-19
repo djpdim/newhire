@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+/** @format */
+
+// App.js
+import React from "react";
+import "./App.css";
+import CompanyLogo from "./assets/megalg.svg"; // Import the company logo image
+import NewHireForm from "./components/NewHireForm";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className='App NewHireForm'>
+            <header className='App-header'>
+                <img src={CompanyLogo} alt='Company Logo' className='logo' />
+                <h1 className='text-xl font-bold'>New Hire IT Checklist Form</h1>
+            </header>
+            <main>
+                <NewHireForm />
+            </main>
+        </div>
+    );
 }
 
 export default App;
