@@ -11,6 +11,7 @@
     align-items: center;
 }
 .logo {
+    margin-right: 45px;
     height: 20%;
     width: 20%;
 }
@@ -69,4 +70,17 @@
     font-size: larger;
     font-weight: bold;
     color: darkgreen;
+}
+
+.footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center; /* Align items horizontally center */
+    align-items: center; /* Align items vertically center */
+    text-align: center; /* Align text center */
+}
+
+.footer p {
+    display: inline;
+    margin-left: 10px; /* Adjust margin as needed */
 }

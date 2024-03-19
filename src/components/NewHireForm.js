@@ -2,7 +2,25 @@
 
 import emailjs from "emailjs-com";
 import React, { useState } from "react";
+import CompanyLogo from "../assets/megalg.svg"; // Import the company logo image
 
+const NavigationBar = () => {
+    return (
+        <div className='App-header'>
+            <img src={CompanyLogo} alt='Company Logo' className='logo' />
+            <h1>New Hire IT Checklist Form</h1>
+        </div>
+    );
+};
+
+const Footer = () => {
+    return (
+        <div className='footer'>
+            <img src={CompanyLogo} alt='Company Logo' className='logo' />
+            <p>&copy; 2024 Mega Contracting Group. All rights reserved.</p>
+        </div>
+    );
+};
 const NewHireForm = () => {
     const [formData, setFormData] = useState({
         employeeName: "",
@@ -36,6 +54,9 @@ const NewHireForm = () => {
             tasks: false,
             reports: false,
             subreq: false,
+            library: false,
+            safety: false,
+            purchasing: false,
         },
         printerAccess: {
             yes: false,
@@ -131,28 +152,44 @@ const NewHireForm = () => {
         //     setErrorMessage("Please fill out all required fields.");
         //     return;
         // }
-        //Prepare the email parameters
-        const message = `
 
-            Employee Name: ${formData.employeeName}
-            Department: ${formData.department}
-            Title: ${formData.title}
-            Supervisor: ${formData.supervisor}
-            Workstation Logistics: ${formData.workstationLogistics}
-            Monitors: ${formData.monitors}
-            Scanner Access: ${formData.scannerAccess}
-            Printer Access: ${formData.printerAccess.yes ? "Yes" : "No"}
-            BlueBeam Needed: ${formData.blueBeamNeeded}
-            Sage Needed: ${formData.sageNeeded}
-            Sage Options: ${Object.keys(formData.sageOptions)
-                .filter(key => formData.sageOptions[key])
-                .map(key => key.charAt(0).toUpperCase() + key.slice(1))}
-            S Drive Access: ${formData.sDriveAccess}
-            S Drive Location: ${formData.sDriveLocation}
-            AutoCAD Access: ${formData.autoCADAccess}
-            Primavera Access: ${formData.primaveraAccess}
-            Planswift Access: ${formData.planswiftAccess}
-        `;
+        // Prepare the email parameters
+        const message = `
+                Employee Name: ${formData.employeeName}
+                Department: ${formData.department}
+                Title: ${formData.title}
+                Supervisor: ${formData.supervisor}
+                Workstation Logistics: ${formData.workstationLogistics}
+                Monitors: ${formData.monitors}
+                Scanner Access: ${formData.scannerAccess}
+                Printer Access: ${formData.printerAccess.yes ? "Yes" : "No"}
+                Database Access: ${formData.databaseAccess}
+                Database Access Options: ${Object.keys(formData.moduleAccess)
+                    .filter(key => formData.moduleAccess[key])
+                    .map(key => {
+                        // Split camelCase module name into separate words
+                        const words = key.split(/(?=[A-Z])/);
+                        // Capitalize each word and join with space
+                        return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+                    })
+                    .join(", ")}
+                Sage Needed: ${formData.sageNeeded}
+                Sage Options: ${Object.keys(formData.sageOptions)
+                    .filter(key => formData.sageOptions[key])
+                    .map(key => {
+                        // Split camelCase module name into separate words
+                        const words = key.split(/(?=[A-Z])/);
+                        // Capitalize each word and join with space
+                        return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+                    })
+                    .join(", ")}
+                BlueBeam Needed: ${formData.blueBeamNeeded}
+                S Drive Access: ${formData.sDriveAccess}
+                S Drive Location: ${formData.sDriveLocation}
+                AutoCAD Access: ${formData.autoCADAccess}
+                Primavera Access: ${formData.primaveraAccess}
+                Planswift Access: ${formData.planswiftAccess}
+`;
 
         // Send the email using EmailJS
         const emailParams = {
@@ -197,6 +234,7 @@ const NewHireForm = () => {
 
     return (
         <div>
+            <NavigationBar />
             <h2>New Hire IT Checklist</h2>
             {showForm ? (
                 <form onSubmit={handleSubmit}>
@@ -546,6 +584,7 @@ const NewHireForm = () => {
             ) : (
                 <div> {successMessage && <p className='successmessage'>{successMessage}</p>}</div>
             )}
+            <Footer />
         </div>
     );
 };
