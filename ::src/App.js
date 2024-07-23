@@ -4,7 +4,7 @@
 import React from "react";
 import "./App.css";
 // import CompanyLogo from "./assets/megalg.svg"; // Import the company logo image
-import NewHireForm from "./NewHireForm";
+import NewHireForm from "./components/NewHireForm";
 
 function App() {
     return (

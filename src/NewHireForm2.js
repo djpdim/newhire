@@ -74,23 +74,38 @@ const NewHireForm = () => {
 
     const handleChange = e => {
         const { name, value, type, checked } = e.target;
+
         if (name === "printerAccess") {
-            // Handle printer access
+            // Handle printer access selection
+            const newValue = value === "Yes";
             setFormData(prevState => ({
                 ...prevState,
                 printerAccess: {
                     ...prevState.printerAccess,
-                    yes: value === "Yes" ? true : false,
-                    [value === "Yes" ? "other" : ""]: "",
+                    yes: newValue,
+                    other: newValue ? "" : prevState.printerAccess.other, // Clear other if selecting No
+                    estPrintRoom: false, // Reset all printer room options when changing printer access
+                    thirdFloorPrintRoom: false,
+                    adminPrintRoom: false,
                 },
             }));
         } else if (name === "printerAccess-other") {
-            // Handle printer access other
+            // Handle other printer access input
             setFormData(prevState => ({
                 ...prevState,
                 printerAccess: {
                     ...prevState.printerAccess,
                     other: value,
+                },
+            }));
+        } else if (name.startsWith("printerAccess")) {
+            // Handle printer access checkboxes
+            const optionName = name.split("-")[1];
+            setFormData(prevState => ({
+                ...prevState,
+                printerAccess: {
+                    ...prevState.printerAccess,
+                    [optionName]: checked,
                 },
             }));
         } else if (name === "databaseAccess") {
@@ -112,16 +127,6 @@ const NewHireForm = () => {
                 ...prevState,
                 sageOptions: {
                     ...prevState.sageOptions,
-                    [optionName]: checked,
-                },
-            }));
-        } else if (name.startsWith("printerAccess")) {
-            // Handle printer access checkboxes
-            const optionName = name.split("-")[1];
-            setFormData(prevState => ({
-                ...prevState,
-                printerAccess: {
-                    ...prevState.printerAccess,
                     [optionName]: checked,
                 },
             }));
@@ -155,41 +160,60 @@ const NewHireForm = () => {
 
         // Prepare the email parameters
         const message = `
-                Employee Name: ${formData.employeeName}
-                Department: ${formData.department}
-                Title: ${formData.title}
-                Supervisor: ${formData.supervisor}
-                Workstation Logistics: ${formData.workstationLogistics}
-                Monitors: ${formData.monitors}
-                Scanner Access: ${formData.scannerAccess}
-                Printer Access: ${formData.printerAccess.yes ? "Yes" : "No"}
-                Database Access: ${formData.databaseAccess}
-                Database Access Options: ${Object.keys(formData.moduleAccess)
-                    .filter(key => formData.moduleAccess[key])
-                    .map(key => {
-                        // Split camelCase module name into separate words
-                        const words = key.split(/(?=[A-Z])/);
-                        // Capitalize each word and join with space
-                        return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-                    })
-                    .join(", ")}
-                Sage Needed: ${formData.sageNeeded}
-                Sage Options: ${Object.keys(formData.sageOptions)
-                    .filter(key => formData.sageOptions[key])
-                    .map(key => {
-                        // Split camelCase module name into separate words
-                        const words = key.split(/(?=[A-Z])/);
-                        // Capitalize each word and join with space
-                        return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-                    })
-                    .join(", ")}
-                BlueBeam Needed: ${formData.blueBeamNeeded}
-                S Drive Access: ${formData.sDriveAccess}
-                S Drive Location: ${formData.sDriveLocation}
-                AutoCAD Access: ${formData.autoCADAccess}
-                Primavera Access: ${formData.primaveraAccess}
-                Planswift Access: ${formData.planswiftAccess}
-`;
+            Employee Name: ${formData.employeeName}
+            Department: ${formData.department}
+            Title: ${formData.title}
+            Supervisor Name: ${formData.supervisor}
+            Workstation Logistics: ${formData.workstationLogistics}
+
+            Hardware Options
+            -----------------
+            Computer Configuration: ${formData.computerConfiguration}
+            Monitors: ${formData.monitors}
+
+            Printer & Scanner Access
+            -----------------
+            Printer Access: ${formData.printerAccess.yes ? "Yes" : "No"}
+            ${
+                formData.printerAccess.yes && // Only display printer options if printer access is Yes
+                `
+                    ${formData.printerAccess.estPrintRoom && "Est Print Room"}
+                    ${formData.printerAccess.thirdFloorPrintRoom && "3rd Floor Print Room"}
+                    ${formData.printerAccess.adminPrintRoom && "Admin Print Room"}
+                    ${formData.printerAccess.other && `Other: ${formData.printerAccess.other}`}
+                `
+            }
+            Scanner Access: ${formData.scannerAccess}
+
+            Software Options
+            -----------------
+            Database Access: ${formData.databaseAccess}
+            Database Access Options: ${Object.keys(formData.moduleAccess)
+                .filter(key => formData.moduleAccess[key])
+                .map(key => {
+                    // Split camelCase module name into separate words
+                    const words = key.split(/(?=[A-Z])/);
+                    // Capitalize each word and join with space
+                    return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+                })
+                .join(", ")}
+            Sage Needed: ${formData.sageNeeded}
+            Sage Options: ${Object.keys(formData.sageOptions)
+                .filter(key => formData.sageOptions[key])
+                .map(key => {
+                    // Split camelCase module name into separate words
+                    const words = key.split(/(?=[A-Z])/);
+                    // Capitalize each word and join with space
+                    return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+                })
+                .join(", ")}
+            BlueBeam Needed: ${formData.blueBeamNeeded}
+            S Drive Access: ${formData.sDriveAccess}
+            S Drive Location: ${formData.sDriveLocation}
+            AutoCAD Access: ${formData.autoCADAccess}
+            Primavera Access: ${formData.primaveraAccess}
+            Planswift Access: ${formData.planswiftAccess}
+            `;
 
         // Send the email using EmailJS
         const emailParams = {
@@ -278,6 +302,22 @@ const NewHireForm = () => {
                             onChange={handleChange}
                         />
                     </label>
+                    {formData.workstationLogistics === "Office" && (
+                        <div>
+                            <label>
+                                Computer Configuration:
+                                <select
+                                    name='computerConfiguration'
+                                    value={formData.computerConfiguration}
+                                    onChange={handleChange}
+                                >
+                                    <option value=''>Select Option</option>
+                                    <option value='Desktop'>Desktop</option>
+                                    <option value='Laptop'>Laptop</option>
+                                </select>
+                            </label>
+                        </div>
+                    )}
                     <label>
                         Jobsite
                         <input
@@ -537,6 +577,7 @@ const NewHireForm = () => {
                             <option value='Yes'>Yes</option>
                         </select>
                     </label>
+
                     {formData.printerAccess.yes && (
                         <div>
                             <label>
