@@ -6,11 +6,13 @@
     justify-content: center;
     align-items: center;
 }
+
 .logo {
     margin-right: 45px;
     height: 20%;
     width: 20%;
 }
+
 .NewHireForm {
     max-width: 600px;
     margin: 0 auto;
@@ -84,4 +86,28 @@
 .required-asterisk {
     color: red;
     /* margin-left: 1px; */
+}
+
+.footerlogo {
+    height: 40px; /* Adjust the height as needed */
+    width: auto; /* Maintain aspect ratio */
+}
+
+/* Add media query for smaller screens */
+@media (max-width: 600px) {
+    .App-header h1 {
+        display: none;
+    }
+
+    .logo {
+        margin-bottom: -70px;
+        margin-top: -80px;
+        width: 80%;
+        margin-right: 0;
+        height: auto;
+    }
+
+    .footerlogo {
+        height: 100px; /* Adjust for smaller screens if necessary */
+    }
 }
