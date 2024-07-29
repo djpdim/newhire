@@ -93,6 +93,10 @@
     width: auto; /* Maintain aspect ratio */
 }
 
+.office-options label {
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+}
+
 /* Add media query for smaller screens */
 @media (max-width: 600px) {
     .App-header h1 {
@@ -108,6 +112,10 @@
     }
 
     .footerlogo {
-        height: 100px; /* Adjust for smaller screens if necessary */
+        height: 30px; /* Adjust for smaller screens if necessary */
+    }
+
+    .office-options label {
+        font-size: 14px; /* Adjust font size for smaller screens */
     }
 }
