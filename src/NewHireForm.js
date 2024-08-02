@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import DatabaseAccessSection from "./components/DatabaseAccessSection";
 import EmployeeInfoSection from "./components/EmployeeInfoSection";
 import Footer from "./components/Footer";
-import HardwareOptions from "./components/HardwareOptions";
+// import HardwareOptions from "./components/HardwareOptions";
 import NavigationBar from "./components/NavigationBar";
 import OtherAccessSection from "./components/OtherAccessSection";
 import PrinterAccessSection from "./components/PrinterAccessSection";
@@ -147,12 +147,13 @@ const NewHireForm = () => {
             .join(", ");
 
         const printerOptions = [
-            formData.printerAccess.estPrintRoom ? "Est Print Room" : "",
+            formData.printerAccess.estPrintRoom ? "Est Ricoh Printer" : "",
             formData.printerAccess.thirdFloorPrintRoom ? "3rd Floor Print Room" : "",
             formData.printerAccess.adminPrintRoom ? "Admin Print Room" : "",
+            formData.printerAccess.wideFormatPlotters ? "Wide Format Plotters" : "",
             formData.printerAccess.other ? `Other: ${formData.printerAccess.other}` : "",
         ]
-            .filter(option => option)
+            .filter(option => option) // Filter out empty strings
             .join("\n");
 
         const printerAccessSection =
@@ -193,25 +194,32 @@ const NewHireForm = () => {
                 : ""
         }`;
 
+        // Updated to handle both "Jobsite" and "Office"
+        let computerConfigurationMessage = "";
+        if (formData.workstationLogistics) {
+            computerConfigurationMessage = `Computer Configuration: ${formData.computerConfiguration || "Laptop"}\n`;
+        }
+
         const message = `
-        Employee Name: ${formData.employeeName}
-        Department: ${formData.department}
-        Title: ${formData.title}
-        Supervisor Name: ${formData.supervisor}
-        Workstation Logistics: ${formData.workstationLogistics || "No"}
+Employee Name: ${formData.employeeName}
+Department: ${formData.department}
+Title: ${formData.title}
+Supervisor Name: ${formData.supervisor}
+Workstation Logistics: ${formData.workstationLogistics || "No"}${
+            formData.workstationLogistics === "Jobsite" ? `\nJob Site: ${formData.jobSite || "No"}` : ""
+        }
 
-        Hardware Options
-        -----------------
-        Computer Configuration: ${formData.computerConfiguration || "No"}
-        Monitors: ${formData.monitors || "No"}
+Hardware Options
+-----------------
+${computerConfigurationMessage}
 
-        Printer & Scanner Access
-        -----------------
-        ${printerAccessSection}
-        Scanner Access: ${formData.scannerAccess || "No"}
+Printer & Scanner Access
+-----------------
+${printerAccessSection}
+Scanner Access: ${formData.scannerAccess || "No"}
 
-        ${softwareOptionsSection.trim()}
-    `;
+${softwareOptionsSection.trim()}
+`;
 
         const emailParams = {
             employee: "IT Checklist for the New Hire",
@@ -233,8 +241,8 @@ const NewHireForm = () => {
                 response => {
                     console.log("SUCCESS!", response.status, response.text);
                     setSuccessMessage(
-                        `Has been submitted successfully!
-                        <a href="/" class="success-link"> Home Page</a>`
+                        `<div class="success-message">Has been submitted successfully!</div>
+                <a href="/" class="success-link">Home Page</a>`
                     );
                     setShowForm(false);
                 },
@@ -245,6 +253,8 @@ const NewHireForm = () => {
             );
     };
 
+    // Hardware option if we ever need to add it back this is for the email parse.
+    // Monitors: ${formData.monitors || "No"}
     return (
         <div>
             <NavigationBar />
@@ -257,7 +267,7 @@ const NewHireForm = () => {
                         missingFields={missingFields}
                     />
                     <WorkstationLogisticsSection formData={formData} handleChange={handleChange} />
-                    <HardwareOptions formData={formData} handleChange={handleChange} />
+                    {/* <HardwareOptions formData={formData} handleChange={handleChange} /> */}
                     <PrinterAccessSection formData={formData} handleChange={handleChange} />
                     <SDriveAccess formData={formData} handleChange={handleChange} />
                     <SoftwareOptionsSection formData={formData} handleChange={handleChange} />

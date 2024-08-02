@@ -40,10 +40,22 @@ const EmployeeInfoSection = ({ formData, handleChange, missingFields }) => {
                     <option value='Accounting'>Accounting</option>
                     <option value='Administration'>Administration</option>
                     <option value='Buyouts'>Buyouts</option>
+                    <option value='Client Services'>Client Services</option>
+                    <option value='Compliance'>Compliance</option>
+                    <option value='Database'>Database</option>
+                    <option value='Development'>Development</option>
                     <option value='Estimating'>Estimating</option>
+                    <option value='Expediting'>Expediting</option>
                     <option value='Human Resources'>Human Resources</option>
+                    <option value='Labor Monitoring'>Labor Monitoring</option>
+                    <option value='Legal'>Legal</option>
+                    <option value='Marketing'>Marketing</option>
+                    <option value='MEP'>MEP</option>
                     <option value='Operations Field'>Operations Field</option>
                     <option value='Operations Office'>Operations Office</option>
+                    <option value='QMP'>QMP</option>
+                    <option value='Safety'>Safety</option>
+                    <option value='Scheduling'>Scheduling</option>
                 </select>
             </label>
             <label>

@@ -1,18 +1,20 @@
 /** @format */
 
-import React from "react";
+// /** @format */
 
-const HardwareOptions = ({ formData, handleChange }) => (
-    <>
-        <label>
-            Computer Monitors:
-            <select name='monitors' value={formData.monitors} onChange={handleChange}>
-                <option value=''>Select</option>
-                <option value='Yes'>Yes</option>
-                <option value='No'>No</option>
-            </select>
-        </label>
-    </>
-);
+// import React from "react";
 
-export default HardwareOptions;
+// const HardwareOptions = ({ formData, handleChange }) => (
+//     <>
+//         <label>
+//             Computer Monitors:
+//             <select name='monitors' value={formData.monitors} onChange={handleChange}>
+//                 <option value=''>Select</option>
+//                 <option value='Yes'>Yes</option>
+//                 <option value='No'>No</option>
+//             </select>
+//         </label>
+//     </>
+// );
+
+// export default HardwareOptions;

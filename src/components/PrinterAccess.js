@@ -42,6 +42,15 @@ const PrinterAccess = ({ formData, handleChange }) => (
                     Admin Print Room
                 </label>
                 <label>
+                    <input
+                        type='checkbox'
+                        name='printerAccess-wideFormatPlotters'
+                        checked={formData.printerAccess.wideFormatPlotters}
+                        onChange={handleChange}
+                    />
+                    Wide Format Plotters
+                </label>
+                <label>
                     Other:
                     <input
                         type='text'

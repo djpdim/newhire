@@ -24,7 +24,7 @@ const PrinterAccessSection = ({ formData, handleChange }) => {
                             checked={formData.printerAccess.estPrintRoom}
                             onChange={handleChange}
                         />
-                        Est Print Room
+                        Est Ricoh Printer
                     </label>
                     <label>
                         <input
@@ -43,6 +43,15 @@ const PrinterAccessSection = ({ formData, handleChange }) => {
                             onChange={handleChange}
                         />
                         Admin Print Room
+                    </label>
+                    <label>
+                        <input
+                            type='checkbox'
+                            name='printerAccess-wideFormatPlotters'
+                            checked={formData.printerAccess.wideFormatPlotters}
+                            onChange={handleChange}
+                        />
+                        Wide Format Plotters
                     </label>
                     <label>
                         Other:
