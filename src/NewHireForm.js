@@ -146,17 +146,52 @@ const NewHireForm = () => {
             .map(key => pdfOptionsLabels[key])
             .join(", ");
 
-        // Construct Printer Access section only if necessary
+        const printerOptions = [
+            formData.printerAccess.estPrintRoom ? "Est Print Room" : "",
+            formData.printerAccess.thirdFloorPrintRoom ? "3rd Floor Print Room" : "",
+            formData.printerAccess.adminPrintRoom ? "Admin Print Room" : "",
+            formData.printerAccess.other ? `Other: ${formData.printerAccess.other}` : "",
+        ]
+            .filter(option => option)
+            .join("\n");
+
         const printerAccessSection =
-            formData.printerAccess.yes === "Yes"
-                ? `
-        Printer Access: Yes
-        ${formData.printerAccess.estPrintRoom && "Est Print Room"}
-        ${formData.printerAccess.thirdFloorPrintRoom && "3rd Floor Print Room"}
-        ${formData.printerAccess.adminPrintRoom && "Admin Print Room"}
-        ${formData.printerAccess.other && `Other: ${formData.printerAccess.other}`}
-    `
-                : "Printer Access: No";
+            formData.printerAccess.yes === "Yes" ? `Printer Access: Yes\n${printerOptions}` : "Printer Access: No";
+
+        let softwareOptionsSection = "Software Options\n-----------------\n";
+        softwareOptionsSection += `S Drive Access: ${formData.sDriveAccess || "No"}${
+            formData.sDriveAccess === "Yes" ? `\nS Drive Location: ${formData.sDriveLocation || "No"}` : ""
+        }\n`;
+        softwareOptionsSection += `PDF Editor: ${pdfOptionsSelected || "No"}\n`;
+        softwareOptionsSection += `AutoCAD Access: ${formData.autoCADAccess || "No"}\n`;
+        softwareOptionsSection += `Primavera Access: ${formData.primaveraAccess || "No"}\n`;
+        softwareOptionsSection += `Planswift Access: ${formData.planswiftAccess || "No"}\n`;
+        softwareOptionsSection += `Sage Access: ${formData.sageNeeded || "No"}${
+            formData.sageNeeded === "Yes"
+                ? `\nSage Options: ${
+                      Object.keys(formData.sageOptions)
+                          .filter(key => formData.sageOptions[key])
+                          .map(key => {
+                              const words = key.split(/(?=[A-Z])/);
+                              return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+                          })
+                          .join(", ") || "No"
+                  }`
+                : ""
+        }\n`;
+        softwareOptionsSection += `Database Access: ${formData.databaseAccess || "No"}${
+            formData.databaseAccess === "Yes"
+                ? `\nDatabase Access Options: ${
+                      Object.keys(formData.moduleAccess)
+                          .filter(key => formData.moduleAccess[key])
+                          .map(key => {
+                              const words = key.split(/(?=[A-Z])/);
+                              return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+                          })
+                          .join(", ") || "No"
+                  }`
+                : ""
+        }`;
 
         const message = `
         Employee Name: ${formData.employeeName}
@@ -175,39 +210,12 @@ const NewHireForm = () => {
         ${printerAccessSection}
         Scanner Access: ${formData.scannerAccess || "No"}
 
-        Software Options
-        -----------------
-        Database Access: ${formData.databaseAccess || "No"}
-        Database Access Options: ${
-            Object.keys(formData.moduleAccess)
-                .filter(key => formData.moduleAccess[key])
-                .map(key => {
-                    const words = key.split(/(?=[A-Z])/);
-                    return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-                })
-                .join(", ") || "No"
-        }
-        Sage Needed: ${formData.sageNeeded || "No"}
-        Sage Options: ${
-            Object.keys(formData.sageOptions)
-                .filter(key => formData.sageOptions[key])
-                .map(key => {
-                    const words = key.split(/(?=[A-Z])/);
-                    return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-                })
-                .join(", ") || "No"
-        }
-        PDF Editor: ${pdfOptionsSelected || "No"}
-        S Drive Access: ${formData.sDriveAccess || "No"}
-        S Drive Location: ${formData.sDriveLocation || "No"}
-        AutoCAD Access: ${formData.autoCADAccess || "No"}
-        Primavera Access: ${formData.primaveraAccess || "No"}
-        Planswift Access: ${formData.planswiftAccess || "No"}
+        ${softwareOptionsSection.trim()}
     `;
 
         const emailParams = {
             employee: "IT Checklist for the New Hire",
-            message: message,
+            message: message.trim(),
             from_name: formData.employeeName,
             supervisor: formData.supervisor,
         };
@@ -224,7 +232,10 @@ const NewHireForm = () => {
             .then(
                 response => {
                     console.log("SUCCESS!", response.status, response.text);
-                    setSuccessMessage("Has been submitted successfully!");
+                    setSuccessMessage(
+                        `Has been submitted successfully!
+                        <a href="/" class="success-link"> Home Page</a>`
+                    );
                     setShowForm(false);
                 },
                 error => {
@@ -260,7 +271,11 @@ const NewHireForm = () => {
                     {errorMessage && <p className='error-message'>{errorMessage}</p>}
                 </form>
             ) : (
-                <div>{successMessage && <p className='successmessage'>{successMessage}</p>}</div>
+                <div>
+                    {successMessage && (
+                        <div className='successmessage' dangerouslySetInnerHTML={{ __html: successMessage }} />
+                    )}
+                </div>
             )}
             <Footer />
         </div>

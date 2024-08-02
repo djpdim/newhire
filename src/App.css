@@ -96,6 +96,15 @@
 .office-options label {
     white-space: nowrap; /* Prevent text from wrapping to the next line */
 }
+.success-link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.success-link:hover {
+    text-decoration: none;
+}
 
 /* Add media query for smaller screens */
 @media (max-width: 600px) {
